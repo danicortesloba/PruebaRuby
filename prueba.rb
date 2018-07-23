@@ -2,45 +2,39 @@ file = File.open('datos.csv', 'r')
 data = file.readlines
 file.close
 
-def promedios(readfile)
+def averages(readfile)
   file = File.open('promedios.csv', 'w')
-  readfile.each do |alumno|
-    nombre = alumno.split(', ').map(&:chomp)[0]
-    nota1 = alumno.split(', ').map(&:chomp)[1]
-    nota2 = alumno.split(', ').map(&:chomp)[2]
-    nota3 = alumno.split(', ').map(&:chomp)[3]
-    nota4 = alumno.split(', ').map(&:chomp)[4]
-    nota5 = alumno.split(', ').map(&:chomp)[5]
-    sum = nota1.to_f + nota2.to_f + nota3.to_f + nota4.to_f + nota5.to_f
-    avr = sum / 5
-    file.puts "El promedio de #{nombre} es #{avr}"
-  end
+    readfile.each do |student|
+    studentinfo = student.split(', ').map(&:chomp)
+    name = studentinfo.shift
+    sum = studentinfo.inject(0) { |suma, grade| suma + grade.to_f }
+    amount = studentinfo.length
+    avr = sum / amount
+    file.puts "El promedio de #{name} es #{avr}"
+    end
   file.close
 end
 
-def inasistencias(readfile)
+def absences(readfile)
   totalabsent = 0
-  readfile.each do |alumno|
-    alumnito = alumno.split(', ').map(&:chomp)
-    alumnito.shift
-    absent = alumnito.count('A')
+    readfile.each do |student|
+    studentinfo = student.split(', ').map(&:chomp)
+    studentinfo.shift
+    absent = studentinfo.count('A')
     totalabsent += absent
-  end
+    end
   puts "El total de inasistencias es #{totalabsent}"
 end
 
-def aprobados(readfile)
-  readfile.each do |alumno|
-    nombre = alumno.split(', ').map(&:chomp)[0]
-    nota1 = alumno.split(', ').map(&:chomp)[1]
-    nota2 = alumno.split(', ').map(&:chomp)[2]
-    nota3 = alumno.split(', ').map(&:chomp)[3]
-    nota4 = alumno.split(', ').map(&:chomp)[4]
-    nota5 = alumno.split(', ').map(&:chomp)[5]
-    sum = nota1.to_f + nota2.to_f + nota3.to_f + nota4.to_f + nota5.to_f
-    avr = sum / 5
-    puts "#{nombre}: aprobado" if avr > 5
-    puts "#{nombre}: reprobado" if avr < 5
+def fails(readfile)
+  readfile.each do |student|
+  studentinfo = student.split(', ').map(&:chomp)
+  name = studentinfo.shift
+  sum = studentinfo.inject(0) { |suma, grade| suma + grade.to_f }
+  amount = studentinfo.length
+  avr = sum / amount
+  puts "#{name}: aprobado" if avr > 5
+  puts "#{name}: reprobado" if avr < 5
   end
 end
 # Menu start
@@ -57,11 +51,11 @@ while option != 4
   option = gets.chomp.to_i
 puts case option
      when 1
-       promedios(data)
+       averages(data)
      when 2
-       inasistencias(data)
+       absences(data)
      when 3
-       aprobados(data)
+       fails(data)
      when 4
        exit
      else
