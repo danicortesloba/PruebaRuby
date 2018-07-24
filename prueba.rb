@@ -27,16 +27,19 @@ def absences(readfile)
 end
 
 def fails(readfile)
+  pass = 5
+  puts '¿Qué nota se necesita para aprobar?'
+  pass = gets.chomp
   readfile.each do |student|
     studentinfo = student.split(', ').map(&:chomp)
     name = studentinfo.shift
     sum = studentinfo.inject(0) { |suma, grade| suma + grade.to_f }
-    amount = studentinfo.length
-    avr = sum / amount
-    puts "#{name}: aprobado" if avr > 5
-    puts "#{name}: reprobado" if avr < 5
+    avr = sum / studentinfo.length
+    puts "#{name}: aprobado" if avr > pass.to_f
+    puts "#{name}: reprobado" if avr < pass.to_f
   end
 end
+
 # Menu start
 p 'Presiona Enter'
 
